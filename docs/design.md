@@ -1,4 +1,4 @@
 # Design
-The design uses the tempature inputs from the user and 2 functions. It checks the tempature readings
-whether it resides inside of 68-76 Fahrenheit isOutOfRange function and prints them out with
-the checkReadings function.
+It takes the tempature range and tempature readings from the user. It checks the tempature readings
+whether it resides inside of Fahrenheit "isOutOfRange" function and prints them out inside of
+the checkReadings function in another file.
