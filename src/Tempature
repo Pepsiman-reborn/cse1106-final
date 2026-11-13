@@ -1,0 +1,32 @@
+#include <stdio.h>
+#define READING_COUNT 5
+
+int isOutOfRange(double temperature) {
+    return (temperature < 68 || temperature > 76) ? 1 : 0;
+}
+
+void checkReadings(double readings[], int count) {
+    printf("\n   Tempature  System Status     Warning LED\n");
+    for (int i = 0; i < count; i++) {
+        if (isOutOfRange(readings[i])) printf("%8.0f F       WARNING           ON\n", readings[i]);
+        else printf("%8.0f F       NORMAL            OFF\n", readings[i]);
+    }
+}
+
+double calculateAverage(double readings[], int count) {
+    double total = 0;
+    for (int i = 0; i < count; i++) total += readings[i];
+    return total / count;
+}
+
+int main(void) {
+    double readings[READING_COUNT] = {65.0, 68.0, 70.0, 76.0, 80.0};
+    
+    checkReadings(readings, READING_COUNT);
+    
+     printf("\nAverage temperature: %.1f F\n",
+           calculateAverage(readings, READING_COUNT));
+
+    return 0;
+}
+
