@@ -14,10 +14,16 @@ void checkReading(float reading, float UpperBound, float LowerBound, FILE* Outpu
 {
     
     printf("\n   Tempature  System Status     Warning LED\n");
-        if (isOutOfRange(reading, UpperBound, LowerBound)) printf("%8.0f F       WARNING           ON\n", reading);
-        gpioWrite(PIN, 1);
-        else printf("%8.0f F       NORMAL            OFF\n", reading);
-        gpioWrite(PIN, 0);
+        if (isOutOfRange(reading, UpperBound, LowerBound)) 
+        {
+            printf("%8.0f F       WARNING           ON\n", reading);
+            gpioWrite(PIN, 1);
+        }
+        else 
+        {
+            printf("%8.0f F       NORMAL            OFF\n", reading);
+            gpioWrite(PIN, 0);
+        }
 
     fprintf(OutputFile, "\n   Tempature  System Status     Warning LED\n");
         if (isOutOfRange(reading, UpperBound, LowerBound)) fprintf(OutputFile, "%8.0f F       WARNING           ON\n", reading);
@@ -50,7 +56,7 @@ int main(int argc, char* argv[])
     char MenuOption;
     FILE *FH = NULL;
 
-    FH = fopen("temperature_log.csv", "w+");
+    FH = fopen("temperature_log.txt", "w+");
     if (FH == NULL)
     {
         printf("The output file did not open. Ending program...\n");
@@ -67,14 +73,14 @@ int main(int argc, char* argv[])
     printf("See the menu below:\n\n");
     MenuOption = PrintMenu(MenuOption);
 
-    while (MenuOption != 'Q' && TempsEntered <= 5)
+    while (MenuOption != 'Q' && TempsEntered < 5)
     {
         switch(MenuOption)
         {
             case 'T':
                 printf("Enter a temperature reading: ");
                 scanf(" %f", &readings[TempsEntered]);
-                checkReading(readings[TempsEntered], UpperBound, LowerBound);
+                checkReading(readings[TempsEntered], UpperBound, LowerBound, FH);
                 TempsEntered++;
                 MenuOption = PrintMenu(MenuOption);
                 break;
@@ -94,8 +100,9 @@ int main(int argc, char* argv[])
         }
     }
         printf("\nAverage temperature: %.1f F\n",
-        calculateAverage(readings, MAX_TEMP_READS));
+        calculateAverage(readings, TempsEntered));
         gpioWrite(PIN, 0);
+        gpioTerminate();
 
     return 0;
 }
